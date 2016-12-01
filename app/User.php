@@ -9,13 +9,15 @@ class User extends Authenticatable
 {
     use Notifiable;
 
+    protected $table = 'users';
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'role_id'
     ];
 
     /**
@@ -26,4 +28,22 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    protected $primaryKey = 'id';
+
+    /**
+     * @return \App\role
+     */
+    public function role() {
+        return $this->belongsTo(Role::class, 'role_id', 'role_id');
+    }
+
+    public static function create(array $attributes = []) {
+        if (in_array('role_id',$attributes)) {
+            $attributes['role_id'] = 2;
+        }
+
+        return parent::create($attributes);
+    }
+    
 }
